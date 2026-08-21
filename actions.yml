@@ -2,7 +2,7 @@ name: Run Module Contest & Mid Module Contest Pipeline Automation
 
 on:
   schedule:
-    - cron: '00 5 * * *'    # 8:00 AM IST (2:35 UTC)
+    - cron: '00 5 * * *'    #10:30 AM IST.
   workflow_dispatch:
 
 concurrency:
