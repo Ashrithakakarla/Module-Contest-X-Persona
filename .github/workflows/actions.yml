@@ -1,0 +1,49 @@
+name: Run Module Contest & Mid Module Contest Pipeline Automation
+
+on:
+  schedule:
+   - cron: '30 6 * * *'    # 12:00 PM IST
+  workflow_dispatch:
+
+concurrency:
+  group: module-contest-pipeline-automation
+  cancel-in-progress: false
+
+jobs:
+  run-module-contest-pipeline:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.9
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Execute Module_Contest_Pipeline_Automation.py
+        env:
+          ASHRITHA_SECRET_KEY: ${{ secrets.ASHRITHA_SECRET_KEY }}
+          SERVICE_ACCOUNT_JSON: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+          USERNAME: ${{ secrets.USERNAME }}
+          METABASE_URL: ${{ secrets.METABASE_URL }}
+
+        run: |
+          echo "=============================="
+          echo "Workflow triggered at UTC: $(date -u)"
+          echo "Current branch: $GITHUB_REF"
+          echo "Repository path: $GITHUB_WORKSPACE"
+          echo "=============================="
+          echo "🚀 Starting Module_Contest_Pipeline_Automation.py..."
+          echo "Using Metabase URL: ${METABASE_URL:0:25}****"
+          echo "Using USERNAME variable: ${USERNAME:+[SET]}"
+
+          python Module_Contest_Pipeline_Automation.py
+
+          echo "✅ Module_Contest_Pipeline_Automation.py executed successfully."
